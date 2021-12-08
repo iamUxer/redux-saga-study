@@ -1,5 +1,6 @@
 const UPDATE_INTRODUCE = "UPDATE_INTRODUCE";
 
+// 1) 사용자가 액션을 요청한다.
 //액션함수
 export const updateIntroduce = (introduce) => ({
   type: UPDATE_INTRODUCE,
