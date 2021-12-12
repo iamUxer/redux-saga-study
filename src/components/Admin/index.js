@@ -14,7 +14,7 @@ const Admin = () => {
   };
 
   const handleClick = () => {
-    dispatch(updateIntroduce(value));
+    dispatch(updateIntroduce(value)); //액션을 요청한다.
   };
   return (
     <div>
