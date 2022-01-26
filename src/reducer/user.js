@@ -1,4 +1,5 @@
-const UPDATE_INTRODUCE = "UPDATE_INTRODUCE";
+export const UPDATE_INTRODUCE = 'UPDATE_INTRODUCE';
+export const GET_USER = 'GET_USER';
 
 // 1) 사용자가 액션을 요청한다.
 //액션함수
@@ -7,8 +8,14 @@ export const updateIntroduce = (introduce) => ({
   introduce: introduce, //store
 });
 
+export const getUser = (user) => ({
+  type: GET_USER,
+  user: user,
+});
+
 const initialState = {
-  introduce: "안녕하세요",
+  introduce: '안녕하세요',
+  user: {},
 };
 
 // 2) 리듀서가 실행되어 스토어의 상태값을 변경
@@ -20,6 +27,14 @@ const user = (state = initialState, action) => {
         // redux의 불변성
         ...state,
         introduce: action.introduce, //store의 상태값 변경
+      };
+    case GET_USER:
+      //API 요청이 들어왔다.
+      const dummyUser = { name: '홍길동', emailt: 'aksjdf@jadkfjs.com' };
+      return {
+        // redux의 불변성
+        ...state,
+        user: dummyUser, //store의 상태값 변경
       };
     default:
       return state;

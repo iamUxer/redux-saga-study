@@ -1,13 +1,26 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
 
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import rootReducer from "./reducer";
+import { Provider } from 'react-redux';
+import { applyMiddleware, compose, createStore } from 'redux';
+import rootReducer from './reducer';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import rootSaga from './saga';
+import createSagaMiddleware from 'redux-saga';
 
-const store = createStore(rootReducer);
+const sagaMiddleware = createSagaMiddleware();
+const middleware = [sagaMiddleware];
+
+const enhancer =
+  process.env.NODE_ENV === 'production'
+    ? compose(applyMiddleware(...middleware))
+    : composeWithDevTools(applyMiddleware(...middleware));
+
+const store = createStore(rootReducer, enhancer);
+sagaMiddleware.run(rootSaga);
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -16,5 +29,5 @@ ReactDOM.render(
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
