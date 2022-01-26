@@ -7,6 +7,7 @@ const Admin = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState("");
   const { introduce } = useSelector((state) => {
+    // useSelector => redux 스토어의 상태를 조회한다.
     return state.user;
   });
   const handleChange = (e) => {
@@ -14,7 +15,7 @@ const Admin = () => {
   };
 
   const handleClick = () => {
-    dispatch(updateIntroduce(value)); //액션을 요청한다.
+    dispatch(updateIntroduce(value)); //value를 넘기고, 액션을 요청한다.
   };
   return (
     <div>
