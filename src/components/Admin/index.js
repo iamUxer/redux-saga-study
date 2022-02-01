@@ -8,7 +8,7 @@ const Admin = () => {
   const [value, setValue] = useState('');
   const { introduce } = useSelector((state) => {
     // useSelector => redux 스토어의 상태를 조회한다.
-    return state.user;
+    return state.user; //reducer의 이름
   });
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -18,8 +18,10 @@ const Admin = () => {
     dispatch(updateIntroduce(value)); //value를 넘기고, 액션을 요청한다.
   };
 
+  const dummyUser = { name: '럭키', email: 'aksjdf@jadkfjs.com' };
+
   const handleGetUser = () => {
-    dispatch(getUser(1));
+    dispatch(getUser(dummyUser));
   };
 
   return (

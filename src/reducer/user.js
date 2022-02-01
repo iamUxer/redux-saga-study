@@ -15,7 +15,7 @@ export const getUser = (user) => ({
 
 const initialState = {
   introduce: '안녕하세요',
-  user: {},
+  user: { name: '홍길동', email: 'aksjdf@jadkfjs.com' },
 };
 
 // 2) 리듀서가 실행되어 스토어의 상태값을 변경
@@ -24,17 +24,14 @@ const user = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_INTRODUCE:
       return {
-        // redux의 불변성
         ...state,
         introduce: action.introduce, //store의 상태값 변경
       };
     case GET_USER:
       //API 요청이 들어왔다.
-      const dummyUser = { name: '홍길동', emailt: 'aksjdf@jadkfjs.com' };
       return {
-        // redux의 불변성
         ...state,
-        user: dummyUser, //store의 상태값 변경
+        user: action.user, //store의 상태값 변경
       };
     default:
       return state;
