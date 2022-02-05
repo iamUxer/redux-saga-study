@@ -1,36 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateIntroduce, getUser } from '../../reducer/user';
+import {
+  createUsers,
+  getAllUsers,
+  patchUsers,
+  deleteUsers,
+} from '../../reducer/user';
+import MaterialTable from 'material-table';
 
 const Admin = () => {
   //store에서 값을 가져오게.
   const dispatch = useDispatch();
-  const [value, setValue] = useState('');
-  const { introduce } = useSelector((state) => {
+  const { users } = useSelector((state) => {
     // useSelector => redux 스토어의 상태를 조회한다.
-    return state.user; //reducer의 이름
+    return state.user; //root reducer에서 명시한 이름
   });
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
 
-  const handleClick = () => {
-    dispatch(updateIntroduce(value)); //value를 넘기고, 액션을 요청한다.
-  };
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, []);
 
-  const dummyUser = { name: '럭키', email: 'aksjdf@jadkfjs.com' };
-
-  const handleGetUser = () => {
-    dispatch(getUser(dummyUser));
-  };
+  const columns = [
+    { title: 'name', field: 'name' },
+    { title: 'email', field: 'email' },
+    { title: 'introduce', field: 'introduce' },
+  ];
 
   return (
     <div>
       <h1>Admin</h1>
-      <input type="text" onChange={handleChange} />
-      <button onClick={handleClick}>입력</button>
-      <button onClick={handleGetUser}>유저정보 가져오기</button>
-      <p>{introduce}</p>
+      <MaterialTable
+        title="유저 리스트"
+        columns={columns}
+        data={[...users]}
+        editable={{
+          onRowAdd: (newData) => {
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                dispatch(createUsers(newData));
+                resolve();
+              }, 1000);
+            });
+          },
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                dispatch(patchUsers(newData));
+                resolve();
+              }, 1000);
+            }),
+          onRowDelete: (oldData) =>
+            new Promise((resolve, reject) => {
+              dispatch(deleteUsers(oldData));
+              setTimeout(() => {
+                resolve();
+              }, 1000);
+            }),
+        }}
+      />
     </div>
   );
 };
