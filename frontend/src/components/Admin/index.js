@@ -26,38 +26,49 @@ const Admin = () => {
     { title: 'introduce', field: 'introduce' },
   ];
 
+  console.log('admin users:::', users);
+
   return (
     <div>
       <h1>Admin</h1>
-      <MaterialTable
-        title="유저 리스트"
-        columns={columns}
-        data={[...users]}
-        editable={{
-          onRowAdd: (newData) => {
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                dispatch(createUsers(newData));
-                resolve();
-              }, 1000);
-            });
-          },
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                dispatch(patchUsers(newData));
-                resolve();
-              }, 1000);
-            }),
-          onRowDelete: (oldData) =>
-            new Promise((resolve, reject) => {
-              dispatch(deleteUsers(oldData));
-              setTimeout(() => {
-                resolve();
-              }, 1000);
-            }),
-        }}
-      />
+      {users && (
+        <MaterialTable
+          title="유저 리스트"
+          columns={columns}
+          data={[...users]}
+          editable={{
+            // onRowAdd: (newData) => {
+            //   new Promise((resolve, reject) => {
+            //     setTimeout(() => {
+            //       dispatch(createUsers(newData));
+            //       resolve();
+            //     }, 1000);
+            //   });
+            // },
+            onRowAdd: (newData) =>
+              new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  dispatch(createUsers(newData));
+                  resolve();
+                }, 1000);
+              }),
+            onRowUpdate: (newData, oldData) =>
+              new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  dispatch(patchUsers(newData));
+                  resolve();
+                }, 1000);
+              }),
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                dispatch(deleteUsers(oldData));
+                setTimeout(() => {
+                  resolve();
+                }, 1000);
+              }),
+          }}
+        />
+      )}
     </div>
   );
 };
