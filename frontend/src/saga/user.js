@@ -30,6 +30,7 @@ function* getAllUsersRequest(action) {
   }
 }
 
+//state를 서버에 넘겨준다.
 function createUserApi(user) {
   const { newuser } = user;
   return axios.post('http://localhost:3010/users', {
@@ -37,10 +38,14 @@ function createUserApi(user) {
   });
 }
 
+//서버에서 받은 data를 action함수에 넘긴다.
 function* createUserApiRequest(action) {
+  //여기서 action은 CREATE_USERS액션 함수.
   try {
-    const newUser = yield call(createUserApi, action);
-    yield put({ type: CREATE_USERS_SUCCESS, users: newUser.data });
+    const reloadUsers = yield call(createUserApi, action);
+    //여기서 action은 createUserApi통신 후, 받은 data(CREATE_USERS액션의 결과)
+    yield put({ type: CREATE_USERS_SUCCESS, users: reloadUsers.data });
+    //data를 CREATE_USERS_SUCCESS 액션에 반환한다.
   } catch (err) {
     yield put({ type: CREATE_USERS_FAILED, error: err.response.data });
   }
@@ -57,8 +62,8 @@ function patchUserApi(user) {
 
 function* patchUserApiRequest(action) {
   try {
-    const reloadUser = yield call(patchUserApi, action);
-    yield put({ type: PATCH_USERS_SUCCESS, users: reloadUser.data });
+    const reloadUsers = yield call(patchUserApi, action);
+    yield put({ type: PATCH_USERS_SUCCESS, users: reloadUsers.data });
   } catch (err) {
     yield put({ type: PATCH_USERS_FAILED, error: err.response.data });
   }
