@@ -12,5 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     introduce: {
       type: DataTypes.STRING(100),
     },
+    token: {
+      type: DataTypes.STRING(100),
+    },
   });
 };

@@ -37,14 +37,6 @@ const Admin = () => {
           columns={columns}
           data={[...users]}
           editable={{
-            // onRowAdd: (newData) => {
-            //   new Promise((resolve, reject) => {
-            //     setTimeout(() => {
-            //       dispatch(createUsers(newData));
-            //       resolve();
-            //     }, 1000);
-            //   });
-            // },
             onRowAdd: (newData) =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {

@@ -1,7 +1,8 @@
-import { Routes, Route, Link } from "react-router-dom";
-import Home from "./components/Home";
-import About from "./components/About";
-import Admin from "./components/Admin";
+import { Routes, Route, Link } from 'react-router-dom';
+import Home from './components/Home';
+import About from './components/About';
+import Admin from './components/Admin';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" element={<Home />}></Route>
         <Route path="/about" element={<About />}></Route>
         <Route path="/admin" element={<Admin />}></Route>
+        <Route path="/login" element={<Login />}></Route>
       </Routes>
     </div>
   );
