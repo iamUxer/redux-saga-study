@@ -13,6 +13,9 @@ import {
   DELETE_USERS,
   DELETE_USERS_SUCCESS,
   DELETE_USERS_FAILED,
+  SIGNUP_USER,
+  SIGNUP_USER_SUCCESS,
+  SIGNUP_USER_FAILED,
 } from '../reducer/user';
 
 // login 요청을 보내는 api
@@ -43,6 +46,7 @@ function* createUserApiRequest(action) {
   //여기서 action은 CREATE_USERS액션 함수.
   try {
     const reloadUsers = yield call(createUserApi, action);
+    console.log('reloadUsers', reloadUsers);
     //여기서 action은 createUserApi통신 후, 받은 data(CREATE_USERS액션의 결과)
     yield put({ type: CREATE_USERS_SUCCESS, users: reloadUsers.data });
     //data를 CREATE_USERS_SUCCESS 액션에 반환한다.
@@ -83,6 +87,18 @@ function* deleteUserApiRequest(action) {
   }
 }
 
+function signupUserApi(user) {
+  return axios.post(`http://localhost:3010/auth/signup`, { user: user });
+}
+function* signupUserApiRequest(action) {
+  try {
+    const signupUser = yield call(signupUserApi, action.user);
+    yield put({ type: SIGNUP_USER_SUCCESS, user: signupUser.data.user });
+  } catch (err) {
+    yield put({ type: SIGNUP_USER_FAILED, error: err.response.data });
+  }
+}
+
 // 로그인 요청이 들어오는지를 감지하는 제너레이터 함수
 // addEventListener 함수와 그 사용법이 비슷하다.
 function* watchGetAllUsers() {
@@ -97,6 +113,9 @@ function* watchPatchUsers() {
 function* watchDeleteUsers() {
   yield takeLatest(DELETE_USERS, deleteUserApiRequest);
 }
+function* watchSignupUser() {
+  yield takeLatest(SIGNUP_USER, signupUserApiRequest);
+}
 
 // userSaga 함수 등록
 export default function* userSaga() {
@@ -105,5 +124,6 @@ export default function* userSaga() {
     watchCreateUsers(),
     watchPatchUsers(),
     watchDeleteUsers(),
+    watchSignupUser(),
   ]);
 }

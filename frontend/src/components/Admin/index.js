@@ -16,17 +16,17 @@ const Admin = () => {
     return state.user; //root reducer에서 명시한 이름
   });
 
+  console.log(users);
+
   useEffect(() => {
     dispatch(getAllUsers());
-  }, []);
+  }, [dispatch]);
 
   const columns = [
     { title: 'name', field: 'name' },
     { title: 'email', field: 'email' },
     { title: 'introduce', field: 'introduce' },
   ];
-
-  console.log('admin users:::', users);
 
   return (
     <div>

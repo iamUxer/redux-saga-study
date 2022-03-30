@@ -16,6 +16,11 @@ export const DELETE_USERS_FAILED = 'DELETE_USERS_FAILED';
 
 export const UPDATE_INTRODUCE = 'UPDATE_INTRODUCE';
 export const UPDATE_AGE = 'UPDATE_AGE';
+
+export const SIGNUP_USER = 'SIGNUP_USER';
+export const SIGNUP_USER_SUCCESS = 'SIGNUP_USER_SUCCESS';
+export const SIGNUP_USER_FAILED = 'SIGNUP_USER_FAILED';
+
 // 1) 유저가 액션함수를 호출
 export const getAllUsers = (user) => ({ type: GET_ALL_USERS }); // 액션함수
 export const createUsers = (user) => ({
@@ -36,12 +41,19 @@ export const deleteUsers = (user) => ({
   type: DELETE_USERS,
   id: user.id,
 });
+export const signupUser = (user) => ({
+  type: SIGNUP_USER,
+  user: user,
+});
 
 const initialState = {
   users: [],
   email: '',
   introduce: '안녕하세요',
+  isSigningUp: false,
 };
+
+console.log('initialState:::', initialState);
 
 // 2) 리듀서가 실행되어 스토어의 상태값을 변화
 const user = (state = initialState, action) => {
@@ -63,6 +75,12 @@ const user = (state = initialState, action) => {
       return { ...state };
     case DELETE_USERS_SUCCESS:
       return { ...state, users: action.users };
+    case SIGNUP_USER:
+      return { ...state, isSigningUp: true };
+    case SIGNUP_USER_SUCCESS:
+      return { ...state, isSigningUp: false };
+    case SIGNUP_USER_FAILED:
+      return { ...state, isSigningUp: false };
     default:
       return state;
   }

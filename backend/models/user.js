@@ -12,8 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     introduce: {
       type: DataTypes.STRING(100),
     },
-    token: {
+    password: {
       type: DataTypes.STRING(100),
     },
   });
 };
+
+// 1) 비밀번호 암호화 bcrypt
+// 2) DB테이블 스키마 변경
+// 3) post로 전달된 값을 DB에 저장한다.
