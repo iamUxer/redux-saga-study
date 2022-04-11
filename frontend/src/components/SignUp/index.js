@@ -1,48 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { signupUser, SIGNUP_USER_SUCCESS } from '../../reducer/user';
+import { signupUser } from '../../reducer/user';
 import styled from 'styled-components';
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  const { isSigningUp } = useSelector((state) => {
+  const { isSignupSuccess, isSignupFailed } = useSelector((state) => {
     // useSelector => redux 스토어의 상태를 조회한다.
     return state.user; //root reducer에서 명시한 이름
   });
 
-  console.log('state.user', isSigningUp);
+  const [isFirst, setIsFirst] = useState(true);
 
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    password: '',
-    passwordCheck: '',
-  });
-  const { name, email, password, passwordCheck } = user;
+  const useInput = (initialValue) => {
+    const [value, setValue] = useState(initialValue);
+    const onChange = (event) => {
+      // console.log(value);
+      setValue(event.target.value);
+    };
+    const reset = () => {
+      setValue(initialValue);
+    };
+    return { value, onChange, reset };
+  };
 
+  const name = useInput('');
+  const email = useInput('');
+  const password = useInput('');
+  const passwordCheck = useInput('');
+
+  //state를 각각 따로 분리한다. useInput 사용해보기
   const [validate, setValidate] = useState({
     password: false,
-  });
+  }); //얘도 isValidate 상태 따로 만들기
 
+  // Password Vaildate
   useEffect(() => {
-    if (user.password !== '' && user.passwordCheck !== '') {
-      if (user.password !== user.passwordCheck) {
-        setValidate((validate) => {
-          // 함수형으로 써야 useEffect array 경고가 없다.
-          return {
-            ...validate,
-            password: false,
-          };
-        });
-      } else {
-        setValidate((validate) => {
-          return {
-            ...validate,
-            password: true,
-          };
-        });
-      }
-    } else {
+    // Fast Failed
+    if (password.value !== '' || passwordCheck.value !== '') {
       setValidate((validate) => {
         return {
           ...validate,
@@ -50,53 +45,78 @@ const SignUp = () => {
         };
       });
     }
-  }, [user]);
 
-  const handleChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
+    if (password.value !== passwordCheck.value) {
+      setValidate((validate) => {
+        // 함수형으로 써야 useEffect array 경고가 없다.
+        return {
+          ...validate,
+          password: false,
+        };
+      });
+      return;
+    }
+
+    setValidate((validate) => {
+      return {
+        ...validate,
+        password: true,
+      };
     });
-  };
+  }, [password.value, passwordCheck.value]);
+
+  // setIsFirst
+  useEffect(() => {
+    if (isSignupFailed) {
+      setIsFirst(true);
+    }
+    if (isSignupSuccess) {
+      setIsFirst(false);
+    }
+  }, [isSignupSuccess, isSignupFailed]);
 
   const handleClick = () => {
     // 서버 통신
     if (validate.password) {
-      dispatch(signupUser(user));
-      setUser({
-        ...user,
-        name: '',
-        email: '',
-        password: '',
-        passwordCheck: '',
-      });
+      dispatch(
+        signupUser({
+          name: name.value,
+          email: email.value,
+          password: password.value,
+          passwordCheck: password.value,
+        })
+      );
     }
+    name.reset();
+    email.reset();
+    password.reset();
+    passwordCheck.reset();
   };
+
   return (
     <SignUpWrapper>
       <div>
         <div>
-          <h2 className={!isSigningUp && 'unvisible'}>회원가입 성공!</h2>
+          {/* 1) 첫 로딩 2) 가입성공했을때 3) 실패했을때 */}
+          {isFirst && <h2>회원가입 해주세요.</h2>}
+          {!isSignupFailed && isSignupSuccess && <h2>회원가입 성공!</h2>}
+          {isSignupFailed && <h2>회원가입 실패</h2>}
         </div>
         <div>
           <label>이름</label>
-          <input name="name" value={name} onChange={handleChange} />
+          <input name="name" {...name} />
         </div>
         <div>
           <label>이메일</label>
-          <input name="email" value={email} onChange={handleChange} />
+          <input name="email" {...email} />
         </div>
         <div>
           <label>비밀번호</label>
-          <input name="password" value={password} onChange={handleChange} />
+          <input name="password" {...password} />
         </div>
         <div>
           <label>비밀번호 확인</label>
-          <input
-            name="passwordCheck"
-            value={passwordCheck}
-            onChange={handleChange}
-          />
+          <input name="passwordCheck" {...passwordCheck} />
         </div>
         <button type={'submit'} onClick={handleClick}>
           Submit

@@ -51,9 +51,9 @@ const initialState = {
   email: '',
   introduce: '안녕하세요',
   isSigningUp: false,
+  isSignupSuccess: false,
+  isSignupFailed: false,
 };
-
-console.log('initialState:::', initialState);
 
 // 2) 리듀서가 실행되어 스토어의 상태값을 변화
 const user = (state = initialState, action) => {
@@ -78,9 +78,19 @@ const user = (state = initialState, action) => {
     case SIGNUP_USER:
       return { ...state, isSigningUp: true };
     case SIGNUP_USER_SUCCESS:
-      return { ...state, isSigningUp: false };
+      return {
+        ...state,
+        isSigningUp: false,
+        isSignupSuccess: true,
+        isSignupFailed: false,
+      };
     case SIGNUP_USER_FAILED:
-      return { ...state, isSigningUp: false };
+      return {
+        ...state,
+        isSigningUp: false,
+        isSignupSuccess: false,
+        isSignupFailed: true,
+      };
     default:
       return state;
   }
